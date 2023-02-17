@@ -1,0 +1,13 @@
+set -e
+echo Test LibACA...
+for i in test/*; do
+	echo Test $i...
+	if ! (
+		./run.tmp $i/pat $i/txt o.tmp >/dev/null &&
+		diff -u $i/out o.tmp
+	); then
+		echo Test failed: $i
+		exit -1
+	fi
+done
+echo 'All tests passed.'

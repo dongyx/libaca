@@ -1,0 +1,83 @@
+set -e
+
+run()
+{
+	local name
+	local prog
+	local test
+	local cnt
+
+	name="$1"
+	prog="$2"
+	test="$3"
+	cnt="$4"
+	printf "%s\t" "$name"
+	for ((i=0; i<$cnt; i++)); do
+		"$prog" "$test/pat" "$test/txt" o.tmp | paste -s -
+	done |
+	awk '
+		{ b += $1; m += $2; r += $3 }
+		END {
+			OFS = "\t"
+			print b/NR, m/NR, r/NR
+		}
+	'
+}
+
+format()
+{
+	awk '
+		BEGIN {
+			KB = 1024
+			MB = 1024 * 1024
+			GB = 1024 * 1024 * 1024
+		}
+		{
+			printf "%s\t%.1fms\t%.1fms\t", $1, $2*1000, $3*1000
+			if ($4 >= GB)
+				printf("%.1fGB\n", $4/GB)
+			else if ($4 >= MB)
+				printf("%.1fMB\n", $4/MB)
+			else if ($4 >= KB)
+				printf("%.1fKB\n", $4/KB)
+			else
+				printf("%dB\n", $4)
+		}
+	'
+}
+
+echo Benchmarking...
+sep='-------'
+cnt=10
+for i in test/alice test/rand test/lfail; do
+	echo; (
+		printf '%s\n' "$i"
+		printf "Prog\tBuild\tMatch\tRSS\n"
+		printf '%s\t%s\t%s\t%s\n' "$sep" "$sep" "$sep" "$sep"
+		naive="$(run naive "naive/run.tmp" "$i" "$cnt")"
+		libaca="$(run libaca ./run.tmp "$i" "$cnt")"
+		printf "%s\n%s\n" "$naive" "$libaca" | format
+		printf '%s\t%s\t%s\t%s\n' "$sep" "$sep" "$sep" "$sep"
+		printf "%s\n%s\n" "$naive" "$libaca" |
+		awk '{
+			for (i = 1; i <= 4; i++)
+				a[NR":"i] = 0+$i
+		}
+		END {
+			printf "Improv"
+			for (i = 2; i < 4; i++)
+				if (a[2":"i] > 0) {
+					d = (a[1":"i] - a[2":"i]) / a[2":"i]
+					printf "\t%.0f%%", d*100
+				} else
+					printf "\t-"
+			if (a[1":"4] > 0) {
+				d = (a[1":"4] - a[2":"4]) / a[1":"4]
+				printf "\t%.0f%%", d*100
+			} else
+				printf "\t-"
+
+			print ""
+		}'
+	) | column -ts'	'
+done
