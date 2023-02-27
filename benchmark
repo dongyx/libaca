@@ -46,6 +46,7 @@ format()
 	'
 }
 
+echo Warning: The unit of RSS may be incorrect on some systems, e.g. Linux.
 echo Benchmarking...
 sep='-------'
 cnt=10
