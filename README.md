@@ -23,7 +23,7 @@ LibACA aims for:
 
 - Simplicity
 
-	**The implementation contains no more than 175 LOCs of C89**, including header files.
+	**The implementation contains no more than 175 LOCs of C**, including header files.
 
 - Robustness
 
@@ -45,11 +45,14 @@ LibACA is designed for binary streams, including infinite ones.
 System Requirements
 -------------------
 
-LibACA requires only C89 and the following feature of the target architecture:
+LibACA requires a C89 compiler, POSIX `errno` definitions, and the following features of the target architecture:
 
 - The binary representation of -1 is `111...11`.
 
-Most mainstream architectures use two's complement, thus they all meet the requirement.
+Most mainstream architectures, systems, and compilers meet the requirements.
+
+To run the test and benchmark, the system should additionally implement the `getrusage()` routine and support the `ru_maxrss` field in the `rusage` structure.
+Most Unix-compatible systems meet the requirements.
 
 Getting Started
 ---------------
