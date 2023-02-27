@@ -138,7 +138,7 @@ Functions
 
 	Initialize the automaton with the specific maximum number of states.
 
-	The safest estimation of `n` is the sum of lengths of all patterns adding 1.
+	The safest estimation of `n` is the sum of lengths of all patterns adding 1. A `n` less than 1 is equivalent to 1.
 
 	Upon sucess, return 0.
 
@@ -150,7 +150,9 @@ Functions
 
 - `int aca_add(aca *aca, char *pat, int n)`
 
-	Add a pattern of length n to the automaton.
+	Add a pattern of length `n` to the automaton.
+
+	A negative `n` is equivalent to 0.
 
 	Upon success, return the pattern index.
 	The first pattern has index 0;
@@ -229,6 +231,7 @@ Improv      -51%     40%      94%
 ~~~
 
 You could run `make benchmark` to perform the benchmark in your machine.
+The unit of RSS may be incorrect in some systems, e.g. Linux.
 
 Internals
 ---------

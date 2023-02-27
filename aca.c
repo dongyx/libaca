@@ -10,10 +10,8 @@ static struct aca_edge *getedge(aca *aca, int from, char sym, int creat);
 
 int aca_init(aca *aca, int n)
 {
-	if (n < 1) {
-		errno = EINVAL;
-		goto ERR;
-	}
+	if (n < 1)
+		n = 1;
 	if (INT_MAX - (n-1) < (n-1) / 3) {
 		errno = ERANGE;
 		goto ERR;
@@ -75,10 +73,10 @@ int aca_add(aca *aca, char *pat, int n)
 			return -1;
 		i = e->to;
 	}
-	if (aca->pat[i] >= 0)
-		return aca->pat[i];
-	/* np <= ns <= maxns, thus np++ won't overflow int */
-	return aca->pat[i] = aca->np++;
+	if (aca->pat[i] < 0)
+		/* np <= ns <= maxns, thus np++ won't overflow int */
+		aca->pat[i] = aca->np++;
+	return aca->pat[i];
 }
 
 int aca_build(aca *aca)
