@@ -40,7 +40,7 @@ LibACA is designed for binary streams, including infinite ones.
 * [Functions](#functions)
 * [Benchmarks](#benchmarks)
 * [Internals](#internals)
-* [Following News](#following-news)
+* [Credits](#credits)
 
 System Requirements
 -------------------
@@ -244,8 +244,8 @@ This trie variant is documented in the following paper.
 
 [Storing a Trie with Compact and Predictable Space](https://arxiv.org/abs/2302.03690)
 
-Following News
---------------
+Credits
+-------
 
-- <https://www.dyx.name>
-- [Twitter](https://twitter.com/dongyx2)
+LibACA was created by [DONG Yuxuan](https://www.dyx.name) in 2023.
+
